@@ -14,7 +14,7 @@ from constants import *
 
 # Create a function called `derive_wallets`
 def derive_wallets(# YOUR CODE HERE):
-    command = # YOUR CODE HERE
+    command = # command = 'php ./derive -g --mnemonic="mnemonic" --cols=path,address,privkey,pubkey --format=json'
     p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
     output, err = p.communicate()
     p_status = p.wait()

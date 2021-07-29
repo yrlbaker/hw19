@@ -13,9 +13,14 @@ coin=os.getenv("coin")
 
 # Import constants.py and necessary functions from bit and web3
 from constants import *
+from bit import *
+from bit.network import NetworkAPI
+from web3 import Web3
+from web3.middleware import geth_poa_middleware
 
-# Create a function called `derive_wallets` by using the following three variables, 
-# shown in ()
+
+# Create a function called `derive_wallets` by using the following three variables: 
+#  mnemonic, coin, numderive
 def derive_wallets(mnemonic, coin, numderive):
     command = f'php ./derive -g --mnemonic="{mnemonic}" --coin="{coin}" --numderive="{numderive}" --cols=path,address,privkey,pubkey --format=json'
     p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
@@ -25,23 +30,25 @@ def derive_wallets(mnemonic, coin, numderive):
 
 # Create a dictionary object called coins to store the output from `derive_wallets`.
 # For example, the ethereum dictionary will have "ETH" as its coin, and the Bitcoin
-# dictionary will have "BTC" as its coin.
+# dictionary will have "BTCTEST" as its coin.
 # The numdervice will output three results each for the ETH and BTCTEST wallets
 coins = {"ETH": derive_wallets(mnemonic, ETH, numderive), 
-"BTC": derive_wallets(mnemonic, ETH, numderive)}
+"BTCTEST": derive_wallets(mnemonic, BTCTEST, numderive)}
 numderive = 3
+
+# print the outputs - json objects change to string format, with the keys sorted
 print(json.dumps(coin, indent=2, sort_keys=True))
 
 # Create a function called `priv_key_to_account` that converts privkey strings to account objects.
-def priv_key_to_account(# YOUR CODE HERE):
+#def priv_key_to_account(# YOUR CODE HERE):
     # YOUR CODE HERE
 
 # Create a function called `create_tx` that creates an unsigned transaction appropriate metadata.
-def create_tx(# YOUR CODE HERE):
+#def create_tx(# YOUR CODE HERE):
     # YOUR CODE HERE
 
 # Create a function called `send_tx` that calls `create_tx`, signs and sends the transaction.
-def send_tx(# YOUR CODE HERE):
+#def send_tx(# YOUR CODE HERE):
     # YOUR CODE HERE
 
 

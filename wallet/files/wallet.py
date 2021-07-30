@@ -21,11 +21,13 @@ from web3.middleware import geth_poa_middleware
 
 # Create a function called `derive_wallets` by using the following three variables: 
 #  mnemonic, coin, numderive
+# Popen will excecute the command in the variable, then reads the subprocess, then waits
+# for the subprocess to finish
 def derive_wallets(mnemonic, coin, numderive):
     command = f'php ./derive -g --mnemonic="{mnemonic}" --coin="{coin}" --numderive="{numderive}" --cols=path,address,privkey,pubkey --format=json'
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
-    output, err = p.communicate()
-    p_status = p.wait()
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+    output, err = process.communicate()
+    process_status = process.wait()
     return json.loads(output)
 
 # Create a dictionary object called coins to store the output from `derive_wallets`.
@@ -39,9 +41,25 @@ numderive = 3
 # print the outputs - json objects change to string format, with the keys sorted
 print(json.dumps(coin, indent=2, sort_keys=True))
 
+# Create the BTCTEST and ETH private keys
+# Converting the PrivateKey objects into strings for printing
+priv_key_eth = coin[ETH][0]["PrivateKey"]
+priv_key_btctest = coin[BTCTEST][0]["PrivateKey"]
+print(json.dumps(priv_key_eth))
+print(json.dumps(priv_key_btctest))
+
+# Placing the poa middleware into its appropriate layer. The geth Ethereum node 
+# is placed at the deepest layer, 0
+w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))
+w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
 # Create a function called `priv_key_to_account` that converts privkey strings to account objects.
-#def priv_key_to_account(# YOUR CODE HERE):
-    # YOUR CODE HERE
+# If the coin is Ethereum or BTCTEST, they will be sent to their appropriate account object.
+def priv_key_to_account(coin, priv_key):
+    if coin == ETH:
+        return Account.privatekeyToAccount(priv_key)
+    elif coin == BTCTEST:
+        return PrivateKeyTestnet(priv_key) 
 
 # Create a function called `create_tx` that creates an unsigned transaction appropriate metadata.
 #def create_tx(# YOUR CODE HERE):
